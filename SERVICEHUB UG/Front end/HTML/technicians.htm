@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Find Technicians - ServiceHub UG</title>
+  <link rel="stylesheet" href="../CSS/technicians.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <nav class="navbar">
+      <h1>ServiceHub UG</h1>
+      <div>
+        <a href="./index.html">Home</a>
+        <a href="./technicians.htm">Technicians</a>
+        <a href="./login.htm">Login</a>
+        <a href="./register.htm">Register</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Page Title Section -->
+  <section class="page-header">
+    <h2>Find Trusted Technicians</h2>
+    <p>Browse and book qualified professionals in your area</p>
+  </section>
+
+  <!-- Main Container -->
+  <div class="technicians-container">
+    <!-- Sidebar: Filters -->
+    <aside class="filters-sidebar">
+      <h3>Filter Technicians</h3>
+      
+      <form id="filterForm">
+        <!-- Search Bar -->
+        <fieldset>
+          <legend>Search</legend>
+          <div class="form-group">
+            <input type="text" id="searchInput" placeholder="Search by name or skill">
+          </div>
+        </fieldset>
+
+        <!-- Service Type Filter -->
+        <fieldset>
+          <legend>Service Type</legend>
+          <div class="form-group">
+            <label><input type="checkbox" class="skillFilter" value="plumbing"> Plumbing</label>
+            <label><input type="checkbox" class="skillFilter" value="electrical"> Electrical</label>
+            <label><input type="checkbox" class="skillFilter" value="carpentry"> Carpentry</label>
+            <label><input type="checkbox" class="skillFilter" value="tiling"> Tiling</label>
+            <label><input type="checkbox" class="skillFilter" value="painting"> Painting</label>
+            <label><input type="checkbox" class="skillFilter" value="hvac"> HVAC</label>
+            <label><input type="checkbox" class="skillFilter" value="general"> General Maintenance</label>
+          </div>
+        </fieldset>
+
+        <!-- Location Filter -->
+        <fieldset>
+          <legend>Location</legend>
+          <div class="form-group">
+            <select id="locationFilter">
+              <option value="">-- All Areas --</option>
+              <option value="kampala">Kampala</option>
+              <option value="makindye">Makindye</option>
+              <option value="kololo">Kololo</option>
+              <option value="nakasero">Nakasero</option>
+              <option value="entebbe">Entebbe</option>
+              <option value="wakiso">Wakiso</option>
+              <option value="mbarara">Mbarara</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Rating Filter -->
+        <fieldset>
+          <legend>Minimum Rating</legend>
+          <div class="form-group">
+            <select id="ratingFilter">
+              <option value="">-- Any Rating --</option>
+              <option value="4.5">4.5+ Stars</option>
+              <option value="4">4+ Stars</option>
+              <option value="3.5">3.5+ Stars</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Budget Filter -->
+        <fieldset>
+          <legend>Budget Range (UGX/hour)</legend>
+          <div class="form-group">
+            <select id="budgetFilter">
+              <option value="">-- Any Budget --</option>
+              <option value="0-50000">Up to 50,000</option>
+              <option value="50000-100000">50,000 - 100,000</option>
+              <option value="100000-200000">100,000 - 200,000</option>
+              <option value="200000+">200,000+</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Availability Filter -->
+        <fieldset>
+          <legend>Availability</legend>
+          <div class="form-group">
+            <label><input type="checkbox" id="availableNow"> Available Now</label>
+          </div>
+        </fieldset>
+
+        <!-- Sort Options -->
+        <fieldset>
+          <legend>Sort By</legend>
+          <div class="form-group">
+            <select id="sortFilter">
+              <option value="relevant">Most Relevant</option>
+              <option value="rating">Highest Rated</option>
+              <option value="price-low">Lowest Price</option>
+              <option value="price-high">Highest Price</option>
+              <option value="newest">Newest</option>
+              <option value="experience">Most Experienced</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <div class="filter-actions">
+          <button type="button" id="applyFilters">Apply Filters</button>
+          <button type="reset" id="resetFilters">Reset</button>
+        </div>
+      </form>
+    </aside>
+
+    <!-- Main Content: Technician Listings -->
+    <main class="technicians-main">
+      <!-- Featured/Top Rated Section -->
+      <section class="featured-section" id="featuredSection" style="display: none;">
+        <h3>Top Rated Technicians</h3>
+        <div class="featured-grid" id="featuredGrid"></div>
+      </section>
+
+      <!-- Results Count -->
+      <div class="results-info">
+        <p>Showing <span id="resultsCount">0</span> technicians
+          <span id="filterInfo" style="display: none;">matching your criteria</span>
+        </p>
+      </div>
+
+      <!-- Technician Cards Grid -->
+      <div id="techList" class="technicians-grid"></div>
+
+      <!-- No Results Message -->
+      <div id="noResults" class="empty-state" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h3>No technicians found</h3>
+        <p>Try adjusting your filters or search criteria</p>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading-state" style="display: none;">
+        <p>Loading technicians...</p>
+      </div>
+
+      <!-- Pagination -->
+      <div id="pagination" class="pagination" style="display: none;">
+        <button id="prevPage" disabled>Previous</button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextPage">Next</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Sample technician data
+    const technicians = [
+      {
+        id: 1,
+        name: "Ahmed Hassan",
+        skills: ["plumbing", "general"],
+        location: "Kampala",
+        rating: 4.9,
+        reviews: 127,
+        experience: "8 years",
+        jobsCompleted: 312,
+        hourlyRate: 85000,
+        responseTime: "30 mins",
+        available: true,
+        image: "👨‍🔧"
+      },
+      {
+        id: 2,
+        name: "Sarah Kampala",
+        skills: ["electrical", "painting"],
+        location: "Kololo",
+        rating: 4.7,
+        reviews: 95,
+        experience: "6 years",
+        jobsCompleted: 256,
+        hourlyRate: 75000,
+        responseTime: "45 mins",
+        available: true,
+        image: "👩‍🔧"
+      },
+      {
+        id: 3,
+        name: "Moses Kiganda",
+        skills: ["carpentry", "tiling"],
+        location: "Makindye",
+        rating: 4.8,
+        reviews: 103,
+        experience: "10 years",
+        jobsCompleted: 421,
+        hourlyRate: 95000,
+        responseTime: "20 mins",
+        available: true,
+        image: "👨‍🔧"
+      },
+      {
+        id: 4,
+        name: "Jane Owino",
+        skills: ["plumbing", "hvac"],
+        location: "Entebbe",
+        rating: 4.6,
+        reviews: 78,
+        experience: "5 years",
+        jobsCompleted: 189,
+        hourlyRate: 65000,
+        responseTime: "1 hour",
+        available: false,
+        image: "👩‍🔧"
+      },
+      {
+        id: 5,
+        name: "Peter Mutua",
+        skills: ["electrical", "general"],
+        location: "Wakiso",
+        rating: 4.5,
+        reviews: 62,
+        experience: "4 years",
+        jobsCompleted: 145,
+        hourlyRate: 55000,
+        responseTime: "1.5 hours",
+        available: true,
+        image: "👨‍🔧"
+      },
+      {
+        id: 6,
+        name: "Linda Kasibante",
+        skills: ["painting", "carpentry"],
+        location: "Kampala",
+        rating: 4.8,
+        reviews: 110,
+        experience: "7 years",
+        jobsCompleted: 298,
+        hourlyRate: 80000,
+        responseTime: "35 mins",
+        available: true,
+        image: "👩‍🔧"
+      }
+    ];
+
+    let filteredTechnicians = [...technicians];
+    let currentPage = 1;
+    const itemsPerPage = 3;
+
+    // Render technician cards
+    function renderTechnicians() {
+      const techList = document.getElementById('techList');
+      const noResults = document.getElementById('noResults');
+
+      if (filteredTechnicians.length === 0) {
+        techList.innerHTML = '';
+        noResults.style.display = 'block';
+        document.getElementById('pagination').style.display = 'none';
+        return;
+      }
+
+      noResults.style.display = 'none';
+      
+      // Pagination
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedTechs = filteredTechnicians.slice(start, end);
+
+      techList.innerHTML = paginatedTechs.map(tech => `
+        <div class="technician-card">
+          <div class="tech-header">
+            <div class="tech-avatar">${tech.image}</div>
+            <div class="tech-info">
+              <h3>${tech.name}</h3>
+              <p class="experience">${tech.experience}</p>
+            </div>
+            ${tech.available ? '<span class="available-badge">Available</span>' : '<span class="unavailable-badge">Unavailable</span>'}
+          </div>
+
+          <div class="tech-skills">
+            ${tech.skills.map(skill => `<span class="skill-badge">${skill.charAt(0).toUpperCase() + skill.slice(1)}</span>`).join('')}
+          </div>
+
+          <div class="tech-stats">
+            <div class="stat">
+              <strong>${tech.rating}</strong>
+              <p>⭐ Rating</p>
+            </div>
+            <div class="stat">
+              <strong>${tech.reviews}</strong>
+              <p>Reviews</p>
+            </div>
+            <div class="stat">
+              <strong>${tech.jobsCompleted}</strong>
+              <p>Jobs Done</p>
+            </div>
+          </div>
+
+          <div class="tech-details">
+            <p><i class="fas fa-map-marker-alt"></i> ${tech.location}</p>
+            <p><i class="fas fa-clock"></i> ${tech.responseTime} response time</p>
+            <p><i class="fas fa-money-bill"></i> UGX ${tech.hourlyRate.toLocaleString()}/hour</p>
+          </div>
+
+          <div class="tech-actions">
+            <button class="btn-secondary" onclick="viewProfile(${tech.id})">View Profile</button>
+            <button class="btn-primary" onclick="bookTechnician(${tech.id})">Book Now</button>
+            <button class="btn-light" onclick="readReviews(${tech.id})">Reviews</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Update results count
+      document.getElementById('resultsCount').textContent = filteredTechnicians.length;
+      document.getElementById('filterInfo').style.display = 'inline';
+
+      // Show pagination if needed
+      if (filteredTechnicians.length > itemsPerPage) {
+        document.getElementById('pagination').style.display = 'flex';
+        document.getElementById('pageInfo').textContent = `Page ${currentPage}`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = end >= filteredTechnicians.length;
+      } else {
+        document.getElementById('pagination').style.display = 'none';
+      }
+    }
+
+    // Apply filters
+    document.getElementById('applyFilters').addEventListener('click', function() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const selectedSkills = Array.from(document.querySelectorAll('.skillFilter:checked')).map(el => el.value);
+      const location = document.getElementById('locationFilter').value;
+      const minRating = document.getElementById('ratingFilter').value;
+      const budget = document.getElementById('budgetFilter').value;
+      const availableOnly = document.getElementById('availableNow').checked;
+
+      filteredTechnicians = technicians.filter(tech => {
+        // Search filter
+        if (searchTerm && !tech.name.toLowerCase().includes(searchTerm) && !tech.skills.some(s => s.includes(searchTerm))) {
+          return false;
+        }
+
+        // Skills filter
+        if (selectedSkills.length > 0 && !tech.skills.some(s => selectedSkills.includes(s))) {
+          return false;
+        }
+
+        // Location filter
+        if (location && tech.location.toLowerCase() !== location) {
+          return false;
+        }
+
+        // Rating filter
+        if (minRating && tech.rating < parseFloat(minRating)) {
+          return false;
+        }
+
+        // Budget filter
+        if (budget) {
+          const [min, max] = budget.split('-').map(v => parseInt(v) || Infinity);
+          if (tech.hourlyRate < min || tech.hourlyRate > max) {
+            return false;
+          }
+        }
+
+        // Availability filter
+        if (availableOnly && !tech.available) {
+          return false;
+        }
+
+        return true;
+      });
+
+      // Sortintg results based on selected sort option
+      const sortBy = document.getElementById('sortFilter').value;
+      if (sortBy === 'rating') filteredTechnicians.sort((a, b) => b.rating - a.rating);
+      if (sortBy === 'price-low') filteredTechnicians.sort((a, b) => a.hourlyRate - b.hourlyRate);
+      if (sortBy === 'price-high') filteredTechnicians.sort((a, b) => b.hourlyRate - a.hourlyRate);
+      if (sortBy === 'experience') filteredTechnicians.sort((a, b) => {
+        const expA = parseInt(a.experience);
+        const expB = parseInt(b.experience);
+        return expB - expA;
+      });
+
+      currentPage = 1;
+      renderTechnicians();
+    });
+
+    // Reset filters
+    document.getElementById('resetFilters').addEventListener('click', function() {
+      filteredTechnicians = [...technicians];
+      currentPage = 1;
+      renderTechnicians();
+    });
+
+    // Pagination
+    document.getElementById('prevPage').addEventListener('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTechnicians();
+        window.scrollTo(0, 0);
+      }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', function() {
+      const maxPages = Math.ceil(filteredTechnicians.length / itemsPerPage);
+      if (currentPage < maxPages) {
+        currentPage++;
+        renderTechnicians();
+        window.scrollTo(0, 0);
+      }
+    });
+
+    // Action handlers
+    function viewProfile(techId) {
+      alert(`Viewing profile for technician ${techId}`);
+      // TODO: Redirect to technician detail page
+    }
+
+    function bookTechnician(techId) {
+      window.location.href = './booking.htm?techId=' + techId;
+    }
+
+    function readReviews(techId) {
+      alert(`Reading reviews for technician ${techId}`);
+      // TODO: Show reviews modal/page
+    }
+
+    // Initial render
+    renderTechnicians();
+  </script>
+  <script src="../JS/technicians.js"></script>
+</body>
+</html>
