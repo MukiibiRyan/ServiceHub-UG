@@ -1,0 +1,425 @@
+<html>
+<head>
+  <title>Register - ServiceHub UG</title>
+  <link rel="stylesheet" href="../CSS/register.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1>ServiceHub UG - User Registration</h1>
+  </header>
+
+  <div class="register-container">
+    <form id="registerForm" class="registration-form">
+      <h2>Create Your Account</h2>
+      
+      <!-- Error Message Display -->
+      <div id="errorMessage" style="display: none;"></div>
+
+      <!-- Step 1: Basic Information -->
+      <fieldset>
+        <legend>Basic Information</legend>
+        
+        <div class="form-group">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" placeholder="+256 700 123 456" required>
+        </div>
+
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth:</label>
+          <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+        </div>
+      </fieldset>
+
+      <!-- Step 2: Password Setup -->
+      <fieldset>
+        <legend>Security</legend>
+        
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="password" name="password" placeholder="Enter a strong password" required>
+            <button type="button" id="togglePassword" class="toggle-password">Show</button>
+          </div>
+          <small>Password must be at least 8 characters with uppercase, lowercase, numbers, and special characters</small>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" required>
+        </div>
+
+        <div id="passwordStrength" class="password-strength">
+          <label>Password Strength:</label>
+          <div class="strength-bar">
+            <div id="strengthIndicator" class="strength-progress"></div>
+          </div>
+          <span id="strengthText">Weak</span>
+        </div>
+      </fieldset>
+
+      <!-- Step 3: Account Type Selection -->
+      <fieldset>
+        <legend>Account Type</legend>
+        
+        <div class="form-group">
+          <label for="accountType">Register as:</label>
+          <select id="accountType" name="accountType" required onchange="toggleRoleFields()">
+            <option value="">-- Select Account Type --</option>
+            <option value="client">Client (Looking for Services)</option>
+            <option value="technician">Technician (Offering Services)</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <!-- Step 4: Address Information -->
+      <fieldset>
+        <legend>Address</legend>
+        
+        <div class="form-group">
+          <label for="streetAddress">Street Address:</label>
+          <input type="text" id="streetAddress" name="streetAddress" placeholder="House number and street name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="city">City/Area:</label>
+          <input type="text" id="city" name="city" placeholder="Kampala, Makindye, etc." required>
+        </div>
+
+        <div class="form-group">
+          <label for="postalCode">Postal Code (Optional):</label>
+          <input type="text" id="postalCode" name="postalCode" placeholder="Postal code if applicable">
+        </div>
+      </fieldset>
+
+      <!-- Step 5: Technician Fields (Conditional) -->
+      <div id="technicianFields" style="display: none;">
+        <fieldset>
+          <legend>Professional Information</legend>
+          
+          <div class="form-group">
+            <label for="skills">Primary Skills/Services:</label>
+            <select id="skills" name="skills" multiple required>
+              <option value="plumbing">Plumbing</option>
+              <option value="electrical">Electrical</option>
+              <option value="carpentry">Carpentry</option>
+              <option value="tiling">Tiling</option>
+              <option value="painting">Painting</option>
+              <option value="hvac">HVAC</option>
+              <option value="masonry">Masonry</option>
+              <option value="other">Other</option>
+            </select>
+            <small>Hold Ctrl/Cmd to select multiple skills</small>
+          </div>
+
+          <div class="form-group">
+            <label for="experience">Years of Experience:</label>
+            <select id="experience" name="experience" required>
+              <option value="">-- Select --</option>
+              <option value="lessThan1">Less than 1 year</option>
+              <option value="1to3">1-3 years</option>
+              <option value="3to5">3-5 years</option>
+              <option value="5to10">5-10 years</option>
+              <option value="moreThan10">More than 10 years</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="qualifications">Qualifications/Certifications:</label>
+            <textarea id="qualifications" name="qualifications" placeholder="List your licenses, certifications, training" rows="4"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="hourlyRate">Hourly Rate (UGX):</label>
+            <input type="number" id="hourlyRate" name="hourlyRate" placeholder="Your hourly rate" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label for="profilePhoto">Profile Photo:</label>
+            <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" required>
+            <small>Upload a clear professional photo</small>
+          </div>
+
+          <div class="form-group">
+            <label for="certifications">Upload Certifications (Optional):</label>
+            <input type="file" id="certifications" name="certifications" multiple accept="image/*,.pdf">
+            <small>You can upload multiple documents as proof of qualifications</small>
+          </div>
+
+          <div class="form-group">
+            <label for="insurance">Insurance Certificate (Optional):</label>
+            <input type="file" id="insurance" name="insurance" accept="image/*,.pdf">
+            <small>Professional liability insurance certificate</small>
+          </div>
+
+          <div class="form-group">
+            <label for="bankName">Bank Name:</label>
+            <input type="text" id="bankName" name="bankName" placeholder="Your bank" required>
+          </div>
+
+          <div class="form-group">
+            <label for="accountNumber">Account Number:</label>
+            <input type="text" id="accountNumber" name="accountNumber" placeholder="Your bank account number" required>
+          </div>
+
+          <div class="form-group">
+            <label for="accountName">Account Name:</label>
+            <input type="text" id="accountName" name="accountName" placeholder="Name on the account" required>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Step 6: Client Fields (Conditional) -->
+      <div id="clientFields" style="display: none;">
+        <fieldset>
+          <legend>Service Preferences</legend>
+          
+          <div class="form-group">
+            <label for="preferredServices">Services You're Interested In:</label>
+            <select id="preferredServices" name="preferredServices" multiple>
+              <option value="plumbing">Plumbing</option>
+              <option value="electrical">Electrical</option>
+              <option value="carpentry">Carpentry</option>
+              <option value="tiling">Tiling</option>
+              <option value="painting">Painting</option>
+              <option value="hvac">HVAC</option>
+              <option value="general">General Maintenance</option>
+            </select>
+            <small>Hold Ctrl/Cmd to select multiple services</small>
+          </div>
+
+          <div class="form-group">
+            <label for="budget">Typical Budget (UGX):</label>
+            <input type="number" id="budget" name="budget" placeholder="Your typical budget range" min="0">
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Step 7: Terms & Conditions -->
+      <fieldset>
+        <legend>Terms & Conditions</legend>
+        
+        <div class="form-group">
+          <label for="agreeTerms">
+            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+            I agree to the Terms and Conditions
+          </label>
+        </div>
+
+        <details>
+          <summary>View Terms and Conditions</summary>
+          <div>
+            <p><strong>Terms and Conditions:</strong></p>
+            <ul>
+              <li>You must be at least 18 years old to use this platform</li>
+              <li>All information provided must be accurate and truthful</li>
+              <li>You are responsible for maintaining the confidentiality of your account</li>
+              <li>ServiceHub UG reserves the right to verify qualifications for technicians</li>
+              <li>Service disputes will be resolved through our arbitration process</li>
+              <li>Users agree to follow our Code of Conduct</li>
+            </ul>
+          </div>
+        </details>
+
+        <div class="form-group">
+          <label for="agreePrivacy">
+            <input type="checkbox" id="agreePrivacy" name="agreePrivacy" required>
+            I agree to the Privacy Policy
+          </label>
+        </div>
+
+        <details>
+          <summary>View Privacy Policy</summary>
+          <div>
+            <p><strong>Privacy Policy:</strong></p>
+            <ul>
+              <li>We collect personal information to provide and improve our services</li>
+              <li>Your data is encrypted and stored securely</li>
+              <li>We will never sell your personal information to third parties</li>
+              <li>You can request to delete your account at any time</li>
+              <li>We comply with data protection regulations</li>
+            </ul>
+          </div>
+        </details>
+
+        <div class="form-group">
+          <label for="agreeEmail">
+            <input type="checkbox" id="agreeEmail" name="agreeEmail">
+            I agree to receive promotional emails and updates (Optional)
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Buttons -->
+      <div class="form-actions">
+        <button type="submit" id="submitBtn">Create Account</button>
+        <button type="reset">Clear Form</button>
+      </div>
+
+      <!-- Sign In Link -->
+      <div class="sign-in-link">
+        <p>Already have an account? <a href="./login.htm">Sign In Here</a></p>
+      </div>
+
+      <!-- Success Message (Hidden initially) -->
+      <div id="successMessage" style="display: none;">
+        <h3>Registration Successful!</h3>
+        <p>Welcome to ServiceHub UG!</p>
+        <p>Your account has been created successfully. A verification email has been sent to <strong id="registeredEmail"></strong></p>
+        <p>Please check your email and click the verification link to activate your account.</p>
+        <p>You will be redirected to the login page in <span id="countdown">5</span> seconds...</p>
+        <a href="./login.htm">Or click here to login immediately</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Show/Hide Password Toggle
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePasswordBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        togglePasswordBtn.textContent = 'Hide';
+      } else {
+        passwordInput.type = 'password';
+        togglePasswordBtn.textContent = 'Show';
+      }
+    });
+
+    // Password Strength Indicator
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+
+      if (password.length >= 8) strength++;
+      if (/[a-z]/.test(password)) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+      const strengthText = document.getElementById('strengthText');
+      const strengthIndicator = document.getElementById('strengthIndicator');
+      const levels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+
+      strengthText.textContent = levels[strength];
+      strengthIndicator.style.width = ((strength + 1) / 5) * 100 + '%';
+    });
+
+    // Toggle Role-Based Fields
+    function toggleRoleFields() {
+      const role = document.getElementById('accountType').value;
+      document.getElementById('technicianFields').style.display = role === 'technician' ? 'block' : 'none';
+      document.getElementById('clientFields').style.display = role === 'client' ? 'block' : 'none';
+    }
+
+    // Form Submission
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const accountType = document.getElementById('accountType').value;
+      const agreeTerms = document.getElementById('agreeTerms').checked;
+      const agreePrivacy = document.getElementById('agreePrivacy').checked;
+
+      const errorMsg = document.getElementById('errorMessage');
+
+      // Validate required fields
+      if (!fullName || !email || !phone || !password || !confirmPassword || !accountType) {
+        errorMsg.textContent = '❌ Please fill in all required fields';
+        errorMsg.style.display = 'block';
+        errorMsg.style.color = '#dc3545';
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        errorMsg.textContent = '❌ Please enter a valid email address';
+        errorMsg.style.display = 'block';
+        errorMsg.style.color = '#dc3545';
+        return;
+      }
+
+      // Validate password match
+      if (password !== confirmPassword) {
+        errorMsg.textContent = '❌ Passwords do not match';
+        errorMsg.style.display = 'block';
+        errorMsg.style.color = '#dc3545';
+        return;
+      }
+
+      // Validate password strength
+      if (password.length < 8) {
+        errorMsg.textContent = '❌ Password must be at least 8 characters';
+        errorMsg.style.display = 'block';
+        errorMsg.style.color = '#dc3545';
+        return;
+      }
+
+      // Validate terms
+      if (!agreeTerms || !agreePrivacy) {
+        errorMsg.textContent = '❌ You must agree to Terms and Privacy Policy';
+        errorMsg.style.display = 'block';
+        errorMsg.style.color = '#dc3545';
+        return;
+      }
+
+      // If technician, validate additional fields
+      if (accountType === 'technician') {
+        const skills = document.getElementById('skills').value;
+        const hourlyRate = document.getElementById('hourlyRate').value;
+        const bankName = document.getElementById('bankName').value.trim();
+        const accountNumber = document.getElementById('accountNumber').value.trim();
+
+        if (!skills || !hourlyRate || !bankName || !accountNumber) {
+          errorMsg.textContent = '❌ Please fill in all required technician fields';
+          errorMsg.style.display = 'block';
+          errorMsg.style.color = '#dc3545';
+          return;
+        }
+      }
+
+      // Clear error and show success
+      errorMsg.style.display = 'none';
+      document.querySelector('.registration-form').style.display = 'none';
+      
+      const successMsg = document.getElementById('successMessage');
+      document.getElementById('registeredEmail').textContent = email;
+      successMsg.style.display = 'block';
+
+      // Countdown redirect
+      let count = 5;
+      const countdownInterval = setInterval(() => {
+        count--;
+        document.getElementById('countdown').textContent = count;
+        if (count === 0) {
+          clearInterval(countdownInterval);
+          window.location.href = './login.htm';
+        }
+      }, 1000);
+
+      console.log('Registration Data:', {
+        fullName, email, phone, accountType, password: '***'
+      });
+    });
+  </script>
+  <script src=\"../JS/register.js\"></script>
+</body>
+</html>

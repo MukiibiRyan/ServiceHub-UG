@@ -1,0 +1,212 @@
+<html>
+<head>
+  <title>Book a Technician</title>
+  <link rel="stylesheet" href="../CSS/booking.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1>ServiceHub UG - Book a Technician</h1>
+  </header>
+
+  <div class="booking-container">
+    <form id="bookingForm" class="booking-form">
+      <h2>Complete Your Booking</h2>
+
+      <!-- Error Message Display -->
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+      <!-- Section 1: Customer Information -->
+      <fieldset>
+        <legend>Your Information</legend>
+        
+        <div class="form-group">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" placeholder="+256 700 123 456" required>
+        </div>
+      </fieldset>
+
+      <!-- Section 2: Service Information -->
+      <fieldset>
+        <legend>Service Details</legend>
+        
+        <div class="form-group">
+          <label for="serviceType">Service Type:</label>
+          <select id="serviceType" name="serviceType" required>
+            <option value="">-- Select a service --</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="electrical">Electrical</option>
+            <option value="carpentry">Carpentry</option>
+            <option value="tiling">Tiling</option>
+            <option value="painting">Painting</option>
+            <option value="hvac">HVAC</option>
+            <option value="general">General Maintenance</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Service Description:</label>
+          <textarea id="description" name="description" placeholder="Describe the work you need done in detail..." rows="5" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="preferredSkills">Preferred Technician Skills (Optional):</label>
+          <input type="text" id="preferredSkills" name="preferredSkills" placeholder="e.g., Licensed, Certified, Experience with brand X">
+        </div>
+      </fieldset>
+
+      <!-- Section 3: Location Information -->
+      <fieldset>
+        <legend>Location</legend>
+        
+        <div class="form-group">
+          <label for="address">Street Address:</label>
+          <input type="text" id="address" name="address" placeholder="House number and street name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="area">Area/Suburb:</label>
+          <input type="text" id="area" name="area" placeholder="e.g., Kampala, Makindye, Kololo" required>
+        </div>
+
+        <div class="form-group">
+          <label for="landmark">Landmark (Optional):</label>
+          <input type="text" id="landmark" name="landmark" placeholder="e.g., Near the shopping center">
+        </div>
+      </fieldset>
+
+      <!-- Section 4: Date & Time ........................................-->
+      <fieldset>
+        <legend>Schedule</legend>
+        
+        <div class="form-group">
+          <label for="preferredDate">Preferred Date:</label>
+          <input type="date" id="preferredDate" name="preferredDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="timeWindow">Preferred Time Window:</label>
+          <select id="timeWindow" name="timeWindow" required>
+            <option value="">-- Select time --</option>
+            <option value="morning">Morning (6 AM - 12 PM)</option>
+            <option value="afternoon">Afternoon (12 PM - 5 PM)</option>
+            <option value="evening">Evening (5 PM - 9 PM)</option>
+            <option value="flexible">Flexible</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="urgency">Urgency Level:</label>
+          <select id="urgency" name="urgency" required>
+            <option value="">-- Select urgency --</option>
+            <option value="normal">Normal (Within a week)</option>
+            <option value="high">High (Within 2-3 days)</option>
+            <option value="emergency">Emergency (Next 24 hours)</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <!-- Section 5: Budget & Payment............................................ -->
+      <fieldset>
+        <legend>Budget & Payment</legend>
+        
+        <div class="form-group">
+          <label for="budgetType">Budget Type:</label>
+          <select id="budgetType" name="budgetType" required>
+            <option value="">-- Select --</option>
+            <option value="open">Open to quotes</option>
+            <option value="range">I have a budget range</option>
+            <option value="fixed">Fixed budget</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="budgetRange" style="display: none;">
+          <label for="minBudget">Budget Range:</label>
+          <input type="number" id="minBudget" name="minBudget" placeholder="Minimum (UGX)">
+          <span>to</span>
+          <input type="number" id="maxBudget" name="maxBudget" placeholder="Maximum (UGX)">
+        </div>
+
+        <div class="form-group" id="fixedBudget" style="display: none;">
+          <label for="budget">Fixed Budget (UGX):</label>
+          <input type="number" id="budget" name="budget" placeholder="Enter budget amount">
+        </div>
+
+        <div class="form-group">
+          <label for="paymentMethod">Preferred Payment Method:</label>
+          <select id="paymentMethod" name="paymentMethod" required>
+            <option value="">-- Select payment method --</option>
+            <option value="mobilemoney">Mobile Money</option>
+            <option value="creditcard">Credit/Debit Card</option>
+            <option value="bank">Bank Transfer</option>
+            <option value="cash">Cash on Completion</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <!-- Section 6: Additional Information................................................... -->
+      <fieldset>
+        <legend>Additional Information</legend>
+        
+        <div class="form-group">
+          <label for="additionalNotes">Special Instructions or Access Info:</label>
+          <textarea id="additionalNotes" name="additionalNotes" placeholder="Any special instructions for the technician (e.g., gate access, security details)" rows="4"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="photos">Attach Photos (Optional):</label>
+          <input type="file" id="photos" name="photos" multiple accept="image/*">
+          <small>You can upload multiple photos to help the technician understand the issue</small>
+        </div>
+      </fieldset>
+
+      <!-- Section 7: Terms & Conditions ................................................... -->
+      <fieldset>
+        <legend>Terms & Conditions</legend>
+        
+        <div class="form-group">
+          <label for="agreeTerms">
+            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+            I agree to the Terms and Conditions and Privacy Policy
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="agreeCancel">
+            <input type="checkbox" id="agreeCancel" name="agreeCancel" required>
+            I understand that cancellations within 24 hours may incur charges
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Buttons............................... -->
+      <div class="form-actions">
+        <button type="submit" id="submitBtn">Submit Booking Request</button>
+        <button type="reset">Clear Form</button>
+        <a href="./index.html">Cancel</a>
+      </div>
+
+      <!-- Booking Confirmation (Hidden initially) -->
+      <div id="confirmationMessage" style="display: none;">
+        <h3>Booking Confirmed!</h3>
+        <p>Your booking ID: <strong id="bookingId"></strong></p>
+        <p>A technician will contact you within 24 hours at the provided phone number.</p>
+        <p>Thank you for using ServiceHub UG!</p>
+      </div>
+    </form>
+  </div>
+
+  <script src="../JS/booking.js"></script>
+</body>
+</html>

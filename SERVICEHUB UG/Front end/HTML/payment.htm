@@ -1,0 +1,366 @@
+<html>
+<head>
+  <title>Payment - ServiceHub UG</title>
+  <link rel="stylesheet" href="../CSS/payment.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h1>ServiceHub UG - Secure Payment</h1>
+  </header>
+
+  <div class="payment-container">
+    <!-- Payment Summary Section -->
+    <section class="payment-summary">
+      <h2>Payment Summary</h2>
+      
+      <div id="paymentForm" class="payment-form">
+        <!-- Order Details -->
+        <fieldset>
+          <legend>Order Details</legend>
+          
+          <table id="orderTable" border="1">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Service Booking</td>
+                <td>Plumbing Service - Water leakage repair</td>
+                <td>1</td>
+                <td>UGX 250,000</td>
+                <td>UGX 250,000</td>
+              </tr>
+              <tr>
+                <td>Platform Fee</td>
+                <td>ServiceHub UG Platform Charge</td>
+                <td>1</td>
+                <td>UGX 25,000</td>
+                <td>UGX 25,000</td>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+
+        <!-- Price Breakdown -->
+        <div class="price-breakdown">
+          <div class="price-row">
+            <span>Subtotal:</span>
+            <span id="subtotal">UGX 275,000</span>
+          </div>
+          
+          <div class="price-row">
+            <span>Tax (18%):</span>
+            <span id="tax">UGX 49,500</span>
+          </div>
+          
+          <div class="price-row">
+            <span>Service Fee:</span>
+            <span id="serviceFee">UGX 10,000</span>
+          </div>
+          
+          <div class="price-row" id="discountRow" style="display: none;">
+            <span>Discount:</span>
+            <span id="discount">-UGX 0</span>
+          </div>
+          
+          <div class="price-row total">
+            <span>Total Amount:</span>
+            <span id="totalAmount">UGX 334,500</span>
+          </div>
+        </div>
+
+        <!-- Promo Code Section -->
+        <fieldset>
+          <legend>Promo Code</legend>
+          
+          <div class="form-group">
+            <input type="text" id="promoCode" placeholder="Enter promo code (if any)">
+            <button type="button" id="applyPromo">Apply Code</button>
+          </div>
+          <div id="promoMessage" style="display: none;"></div>
+        </fieldset>
+
+        <!-- Billing Information -->
+        <fieldset>
+          <legend>Billing Information</legend>
+          
+          <div class="form-group">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" placeholder="+256 700 123 456" required>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Billing Address:</label>
+            <input type="text" id="address" placeholder="Street address" required>
+          </div>
+
+          <div class="form-group">
+            <label for="city">City/Area:</label>
+            <input type="text" id="city" placeholder="Kampala" required>
+          </div>
+
+          <div class="form-group">
+            <label for="zipcode">Postal Code (Optional):</label>
+            <input type="text" id="zipcode" placeholder="Postal code if applicable">
+          </div>
+        </fieldset>
+
+        <!-- Payment Method Selection -->
+        <fieldset>
+          <legend>Payment Method</legend>
+          
+          <div class="form-group">
+            <label for="paymentMethod">Select Payment Method:</label>
+            <select id="paymentMethod" required onchange="updatePaymentDetails()">
+              <option value="">-- Choose Payment Method --</option>
+              <option value="mobilemoney"><img src="../../assets/Airtel money.png" alt="Airtel Money"><img src="../../assets/MTN momo icon.jpg" alt="MTN MobileMoney">Mobile Money (MTN, Airtel)</option>
+              <option value="creditcard"><img src="../../assets/Credit card.png" alt="Credit/Debit Card">Credit/Debit Card</option>
+              <option value="banktransfer"><img src="../../assets/Bank transfer.png" alt="Bank Transfer">Bank Transfer</option>
+              <option value="cashcompletion"><img src="../../assets/Cash on completion.png" alt="Cash on Completion">Cash on Completion</option>
+            </select>
+          </div>
+
+          <!-- Mobile Money Details -->
+          <div id="mobileMoneySection" style="display: none;">
+            <div class="form-group">
+              <label for="mobileProvider">Mobile Money Provider:</label>
+              <select id="mobileProvider" required>
+                <option value="mtn">MTN Mobile Money</option>
+                <option value="airtel">Airtel Money</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="mobileNumber">Mobile Number:</label>
+              <input type="tel" id="mobileNumber" placeholder="256 700 123 456" required>
+            </div>
+
+            <button type="button" id="processMobilePayment" class="btn-payment">Send Payment Request</button>
+            <p><small>You will receive a prompt on your phone to authorize the payment.</small></p>
+          </div>
+
+          <!-- Credit Card Details -->
+          <div id="creditCardSection" style="display: none;">
+            <div class="form-group">
+              <label for="cardName">Name on Card:</label>
+              <input type="text" id="cardName" placeholder="Full name as shown on card" required>
+            </div>
+
+            <div class="form-group">
+              <label for="cardNumber">Card Number:</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+
+            <div class="form-group">
+              <label for="expiryDate">Expiry Date:</label>
+              <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+            </div>
+
+            <div class="form-group">
+              <label for="cvv">CVV:</label>
+              <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+            </div>
+
+            <button type="button" id="processCardPayment" class="btn-payment">Pay with Card</button>
+            <p><small>Your card details are encrypted and secure. We use PCI DSS compliant payment processing.</small></p>
+          </div>
+
+          <!-- Bank Transfer Details -->
+          <div id="bankTransferSection" style="display: none;">
+            <div class="form-group">
+              <strong>Bank Details:</strong>
+              <p>Bank Name: ServiceHub UG Bank</p>
+              <p>Account Number: 1234567890</p>
+              <p>Account Name: ServiceHub UG Limited</p>
+              <p>Swift Code: SHUBAUG</p>
+              <p>Reference: Please use booking ID as reference</p>
+            </div>
+
+            <button type="button" id="processTransferPayment" class="btn-payment">I've Completed the Transfer</button>
+            <p><small>After transfer, please confirm here. Payment verification may take 1-2 hours.</small></p>
+          </div>
+
+          <!-- Cash on Completion -->
+          <div id="cashSection" style="display: none;">
+            <p>You will pay the technician <strong>UGX <span id="cashAmount">334,500</span></strong> in cash upon completion of the service.</p>
+            
+            <div class="form-group">
+              <label for="agreeCash">
+                <input type="checkbox" id="agreeCash" required>
+                I agree to pay cash on completion of the service
+              </label>
+            </div>
+
+            <button type="button" id="processCashPayment" class="btn-payment">Confirm Cash Payment</button>
+          </div>
+        </fieldset>
+
+        <!-- Terms & Conditions -->
+        <fieldset>
+          <legend>Terms & Conditions</legend>
+          
+          <div class="form-group">
+            <label for="agreeTerms">
+              <input type="checkbox" id="agreeTerms" required>
+              I agree to the Terms and Conditions and Refund Policy
+            </label>
+          </div>
+
+          <details>
+            <summary>View Refund Policy</summary>
+            <div>
+              <p><strong>Refund Policy:</strong></p>
+              <ul>
+                <li>Cancellation within 24 hours of booking: Full refund</li>
+                <li>Cancellation 12-24 hours before: 50% refund</li>
+                <li>Cancellation less than 12 hours: No refund</li>
+                <li>If technician doesn't show up: Full refund + UGX 10,000 credit</li>
+              </ul>
+            </div>
+          </details>
+
+          <div class="form-group">
+            <label for="agreePrivacy">
+              <input type="checkbox" id="agreePrivacy" required>
+              I agree to the Privacy Policy
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Error Message -->
+        <div id="errorMessage" style="display: none; padding: 15px; margin: 15px 0; border-radius: 4px; color: white; background-color: #dc3545;"></div>
+
+        <!-- Success Message -->
+        <div id="successMessage" style="display: none; padding: 15px; margin: 15px 0; border-radius: 4px; color: white; background-color: #28a745;"></div>
+
+        <!-- Payment Buttons -->
+        <div class="form-actions">
+          <button type="button" onclick="processPayment()" class="btn-primary">Complete Payment</button>
+          <button type="reset" class="btn-secondary">Clear Form</button>
+          <a href="./index.html">Cancel</a>
+        </div>
+      </div>
+
+      <!-- Payment Confirmation (Hidden initially) -->
+      <div id="confirmationSection" style="display: none;">
+        <h3>Payment Successful!</h3>
+        
+        <div class="receipt">
+          <h4>Receipt</h4>
+          
+          <p><strong>Transaction ID:</strong> <span id="transactionId"></span></p>
+          <p><strong>Payment Method:</strong> <span id="methodDisplay"></span></p>
+          <p><strong>Amount Paid:</strong> <span id="amountPaid"></span></p>
+          <p><strong>Date & Time:</strong> <span id="transactionTime"></span></p>
+          <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Completed</span></p>
+          
+          <hr>
+          
+          <p>A receipt has been sent to <span id="receiptEmail"></span></p>
+          <p>Your booking will be confirmed shortly. A technician will contact you within 24 hours.</p>
+        </div>
+
+        <button onclick="downloadReceipt()">Download Receipt</button>
+        <a href="./dashboard.htm">Go to Dashboard</a>
+      </div>
+    </section>
+
+    <!-- Payment History Section -->
+    <section class="payment-history">
+      <h2>Payment History</h2>
+      
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#TXN001</td>
+            <td>2026-04-05</td>
+            <td>UGX 334,500</td>
+            <td>Mobile Money</td>
+            <td><span style="color: #28a745;">Completed</span></td>
+          </tr>
+          <tr>
+            <td>#TXN002</td>
+            <td>2026-04-02</td>
+            <td>UGX 250,000</td>
+            <td>Credit Card</td>
+            <td><span style="color: #28a745;">Completed</span></td>
+          </tr>
+          <tr>
+            <td>#TXN003</td>
+            <td>2026-03-30</td>
+            <td>UGX 450,000</td>
+            <td>Bank Transfer</td>
+            <td><span style="color: #28a745;">Completed</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Support Section -->
+    <section class="payment-support">
+      <h2>Need Help?</h2>
+      
+      <div class="faq">
+        <details>
+          <summary>What payment methods do you accept?</summary>
+          <p>We accept Mobile Money (MTN, Airtel), Credit/Debit Cards, Bank Transfers, and Cash on Completion.</p>
+        </details>
+
+        <details>
+          <summary>Is my payment information secure?</summary>
+          <p>Yes, we use PCI DSS compliant encryption and secure payment gateways. Your information is never stored or shared.</p>
+        </details>
+
+        <details>
+          <summary>What if I don't have money now?</summary>
+          <p>You can choose "Cash on Completion" to pay the technician directly upon completion of the service.</p>
+        </details>
+
+        <details>
+          <summary>Can I get a refund?</summary>
+          <p>Yes, see our Refund Policy in the Terms & Conditions section above.</p>
+        </details>
+
+        <details>
+          <summary>How do I contact support?</summary>
+          <p>Email: mukuryn@gmail.com | Phone: +256 791 469 205 | Live Chat available 9 AM - 6 PM (Mon-Fri)</p>
+        </details>
+      </div>
+
+      <div class="contact-support">
+        <h3>Direct Support</h3>
+        <p>Email: <a href="mailto:mukuryn@gmail.com">mukuryn@gmail.com</a></p>
+        <p>Phone: <a href="tel:+256791469205">+256 791 469 205</a></p>
+        <p>WhatsApp: <a href="https://wa.me/256791469205"><i class="fa-brands fa-whatsapp"></i>Message Us</a></p>
+      </div>
+    </section>
+  </div>
+  <script src="../JS/payment.js"></script>
+</body>
+</html>
