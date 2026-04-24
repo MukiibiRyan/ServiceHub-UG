@@ -113,41 +113,33 @@ loginForm.addEventListener("submit", (event) => {
     // Log the data (for testing)
     console.log("Login Data:", loginData);
     
-    // TODO: Send loginData to backend API
-    // Example: 
-    // fetch('/api/login', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(loginData)
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.success) {
-    //         alert("Login successful!");
-    //         // Redirect based on role
-    //         if (data.user.role === 'admin') {
-    //             window.location.href = './admin_dashboard.htm';
-    //         } else {
-    //             window.location.href = './dashboard.htm';
-    //         }
-    //     } else {
-    //         showError(data.message);
-    //     }
-    // })
-    // .catch(error => {
-    //     showError("An error occurred. Please try again.");
-    //     console.error('Error:', error);
-    // });
-    
-    // Simulate successful login with role-based redirection
-    alert(`Login successful!\nWelcome ${role}!`);
-    
-    // Redirect based on role (for demo purposes)
-    if (role === 'admin') {
-        window.location.href = './admin_dashboard.htm';
-    } else {
-        window.location.href = './dashboard.htm';
-    }
+    // Send loginData to backend API
+    fetch('../Backend/index.php/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Store user session (simple implementation)
+            localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('token', data.token);
+            
+            // Redirect based on user type
+            if (data.user.type === 'admin') {
+                window.location.href = './admin_dashboard.htm';
+            } else {
+                window.location.href = './dashboard.htm';
+            }
+        } else {
+            showError(data.error || 'Login failed');
+        }
+    })
+    .catch(error => {
+        showError("An error occurred. Please try again.");
+        console.error('Error:', error);
+    });
 });
 
 // ======== Error Message Display ========

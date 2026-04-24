@@ -398,27 +398,67 @@
         }
       }
 
-      // Clear error and show success
-      errorMsg.style.display = 'none';
-      document.querySelector('.registration-form').style.display = 'none';
-      
-      const successMsg = document.getElementById('successMessage');
-      document.getElementById('registeredEmail').textContent = email;
-      successMsg.style.display = 'block';
+      // Prepare registration data
+      const registrationData = {
+        fullName,
+        email,
+        phone,
+        password,
+        accountType,
+        streetAddress: document.getElementById('streetAddress').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        postalCode: document.getElementById('postalCode').value.trim()
+      };
 
-      // Countdown redirect
-      let count = 5;
-      const countdownInterval = setInterval(() => {
-        count--;
-        document.getElementById('countdown').textContent = count;
-        if (count === 0) {
-          clearInterval(countdownInterval);
-          window.location.href = './login.htm';
+      // Add technician-specific data if applicable
+      if (accountType === 'technician') {
+        registrationData.skills = Array.from(document.getElementById('skills').selectedOptions).map(option => option.value);
+        registrationData.experience = document.getElementById('experience').value;
+        registrationData.qualifications = document.getElementById('qualifications').value.trim();
+        registrationData.hourlyRate = parseFloat(document.getElementById('hourlyRate').value);
+        registrationData.bankName = document.getElementById('bankName').value.trim();
+        registrationData.accountNumber = document.getElementById('accountNumber').value.trim();
+        registrationData.accountName = document.getElementById('accountName').value.trim();
+      }
+
+      // Send to backend
+      fetch('../Backend/index.php/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Clear error and show success
+          errorMsg.style.display = 'none';
+          document.querySelector('.registration-form').style.display = 'none';
+          
+          const successMsg = document.getElementById('successMessage');
+          document.getElementById('registeredEmail').textContent = email;
+          successMsg.style.display = 'block';
+
+          // Countdown redirect
+          let count = 5;
+          const countdownInterval = setInterval(() => {
+            count--;
+            document.getElementById('countdown').textContent = count;
+            if (count === 0) {
+              clearInterval(countdownInterval);
+              window.location.href = './login.htm';
+            }
+          }, 1000);
+        } else {
+          errorMsg.textContent = '❌ ' + (data.error || 'Registration failed');
+          errorMsg.style.display = 'block';
+          errorMsg.style.color = '#dc3545';
         }
-      }, 1000);
-
-      console.log('Registration Data:', {
-        fullName, email, phone, accountType, password: '***'
+      })
+      .catch(error => {
+        errorMsg.textContent = '❌ An error occurred. Please try again.';
+        errorMsg.style.display = 'block';
+        errorMsg.style.color = '#dc3545';
+        console.error('Error:', error);
       });
     });
   </script>
