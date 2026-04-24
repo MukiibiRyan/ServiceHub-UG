@@ -78,6 +78,7 @@
             <option value="">-- Select Account Type --</option>
             <option value="client">Client (Looking for Services)</option>
             <option value="technician">Technician (Offering Services)</option>
+            <option value="admin">Administrator (Platform Management)</option>
           </select>
         </div>
       </fieldset>
@@ -323,6 +324,7 @@
       const role = document.getElementById('accountType').value;
       document.getElementById('technicianFields').style.display = role === 'technician' ? 'block' : 'none';
       document.getElementById('clientFields').style.display = role === 'client' ? 'block' : 'none';
+      // Admin role doesn't need additional fields
     }
 
     // Form Submission

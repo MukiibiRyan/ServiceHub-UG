@@ -124,8 +124,12 @@ loginForm.addEventListener("submit", (event) => {
     // .then(data => {
     //     if (data.success) {
     //         alert("Login successful!");
-    //         // Redirect to dashboard
-    //         window.location.href = '/dashboard';
+    //         // Redirect based on role
+    //         if (data.user.role === 'admin') {
+    //             window.location.href = './admin_dashboard.htm';
+    //         } else {
+    //             window.location.href = './dashboard.htm';
+    //         }
     //     } else {
     //         showError(data.message);
     //     }
@@ -135,7 +139,15 @@ loginForm.addEventListener("submit", (event) => {
     //     console.error('Error:', error);
     // });
     
+    // Simulate successful login with role-based redirection
     alert(`Login successful!\nWelcome ${role}!`);
+    
+    // Redirect based on role (for demo purposes)
+    if (role === 'admin') {
+        window.location.href = './admin_dashboard.htm';
+    } else {
+        window.location.href = './dashboard.htm';
+    }
 });
 
 // ======== Error Message Display ========
